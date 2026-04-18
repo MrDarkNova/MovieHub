@@ -1,3 +1,149 @@
+#!/bin/bash
+# Run from inside the MovieHub/ folder
+
+# ════════════════════════════════════════════
+# FILE 1: index.html
+# ════════════════════════════════════════════
+cat > index.html << 'EOF'
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ᴅᴀʀᴋɴᴏᴠᴀ · anime & movie hub</title>
+    <meta property="og:title" content="ᴅᴀʀᴋɴᴏᴠᴀ · Anime & Movie Hub" />
+    <meta property="og:description" content="Watch and download the latest movies, TV series, and anime. Free streaming and direct downloads." />
+    <meta property="og:image" content="https://files.catbox.moe/p1vn75.png" />
+    <meta property="og:url" content="https://mrdarknova-movie-hub.netlify.app" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="ᴅᴀʀᴋɴᴏᴠᴀ" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="ᴅᴀʀᴋɴᴏᴠᴀ · Anime & Movie Hub" />
+    <meta name="twitter:description" content="Watch and download the latest movies, series and anime." />
+    <meta name="twitter:image" content="https://files.catbox.moe/p1vn75.png" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.3/dist/hls.min.js"></script>
+</head>
+<body>
+<div id="dnLoader">
+    <div class="dn-lname">DARKNOVA</div>
+    <div class="dn-lsub">LOADING...</div>
+    <div class="dn-lbar"></div>
+</div>
+    <div class="scene-bg">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+    <div id="toast" class="toast">✦ ᴅᴀʀᴋɴᴏᴠᴀ</div>
+    <div class="back-to-top" id="backToTop">
+        <svg viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"></polyline></svg>
+    </div>
+    <header class="top-bar">
+        <div class="logo">ᴅᴀʀᴋɴᴏᴠᴀ</div>
+        <div class="search-container">
+            <svg class="search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><line x1="16.5" y1="16.5" x2="22" y2="22"></line></svg>
+            <input type="text" id="searchInput" placeholder="Search movies, series..." autocomplete="off">
+            <button id="searchBtn">SEARCH</button>
+        </div>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+            <svg id="iconMoon" viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            <svg id="iconSun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="display:none"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        </button>
+    </header>
+    <nav class="bottom-nav">
+        <div class="nav-item active" data-section="home">
+            <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            <span class="nav-label">HOME</span>
+            <span class="tooltip">Home</span>
+        </div>
+        <div class="nav-item" data-section="trending">
+            <svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+            <span class="nav-label">TREND</span>
+            <span class="tooltip">Trending</span>
+        </div>
+        <div class="nav-item" data-section="series">
+            <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+            <span class="nav-label">SERIES</span>
+            <span class="tooltip">TV/Series</span>
+        </div>
+        <div class="nav-item" data-section="anime">
+            <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <span class="nav-label">ANIME</span>
+            <span class="tooltip">Anime</span>
+        </div>
+        <div class="nav-item" data-section="live">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49m11.31-2.82a10 10 0 0 1 0 14.14m-14.14 0a10 10 0 0 1 0-14.14"/></svg>
+            <span class="nav-label">LIVE</span>
+            <span class="tooltip">Live Sports</span>
+        </div>
+        <div class="nav-item" data-section="discover">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+            <span class="nav-label">FIND</span>
+            <span class="tooltip">Discover</span>
+        </div>
+    </nav>
+    <main class="main" id="mainContent">
+        <div class="loader" id="globalLoader" style="display:none;"></div>
+        <div id="contentContainer"></div>
+    </main>
+    <div id="detailModal" class="modal">
+        <div class="modal-card">
+            <button class="close" id="closeModal" aria-label="Close"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+            <div id="modalDynamic"></div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+<script>
+(function(){
+  function hide(){var l=document.getElementById('dnLoader');if(l){l.classList.add('dn-hidden');setTimeout(function(){if(l.parentNode)l.parentNode.removeChild(l);},500);}}
+  document.addEventListener('DOMContentLoaded',function(){setTimeout(hide,1600);});
+  window.addEventListener('load',function(){setTimeout(hide,300);});
+  setTimeout(hide,3000);
+})();
+</script>
+</body>
+</html>
+EOF
+echo "✓ index.html"
+
+# ════════════════════════════════════════════
+# FILE 2: style.css — strip garbage, add loader
+# ════════════════════════════════════════════
+python3 - << 'PYEOF'
+with open('style.css','r') as f:
+    content = f.read()
+
+cut = content.find('}50%{opacity')
+if cut != -1:
+    content = content[:cut+1]
+
+loader_css = """
+
+#dnLoader{position:fixed;inset:0;z-index:9999;background:#050508;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;transition:opacity .5s ease,visibility .5s ease;}
+#dnLoader.dn-hidden{opacity:0;visibility:hidden;pointer-events:none;}
+.dn-lname{font-family:'Bebas Neue',cursive;font-size:2.8rem;letter-spacing:10px;background:linear-gradient(135deg,#7c5cfc,#22d3ee,#a78bfa);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 24px rgba(124,92,252,.7));animation:dnPulse 1.6s ease-in-out infinite;}
+.dn-lsub{font-family:'Space Mono',monospace;font-size:.55rem;letter-spacing:.22em;color:#5a5475;margin-top:-14px;}
+.dn-lbar{width:140px;height:2px;background:rgba(255,255,255,.08);border-radius:2px;overflow:hidden;}
+.dn-lbar::after{content:'';display:block;height:100%;background:linear-gradient(90deg,#7c5cfc,#22d3ee);animation:dnBar 1.3s ease-in-out infinite;}
+@keyframes dnPulse{0%,100%{opacity:1;filter:drop-shadow(0 0 24px rgba(124,92,252,.7))}50%{opacity:.6;filter:drop-shadow(0 0 12px rgba(124,92,252,.3))}}
+@keyframes dnBar{0%{width:0;margin-left:0}50%{width:80%;margin-left:0}100%{width:0;margin-left:100%}}
+"""
+
+if '#dnLoader' not in content:
+    content = content + loader_css
+
+with open('style.css','w') as f:
+    f.write(content)
+print('✓ style.css')
+PYEOF
+
+# ════════════════════════════════════════════
+# FILE 3: script.js — TMDB details/trailers + xcasper streams/downloads
+# ════════════════════════════════════════════
+cat > script.js << 'EOF'
 (function(){
   function revert(){
     var a=document.querySelector('.logo');
@@ -580,3 +726,8 @@
   loadHome();
 
 })();
+EOF
+echo "✓ script.js"
+echo ""
+echo "✓ All done — now push:"
+echo "  git add . && git commit -m 'fix: DOCTYPE + loader + TMDB detail/trailer + xcasper downloads' && git push origin master --force"

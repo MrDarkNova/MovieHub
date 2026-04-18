@@ -1,4 +1,4 @@
-!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
@@ -17,17 +17,19 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.12.0/tsparticles.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.3/dist/hls.min.js"></script>
 </head>
 <body>
-<div id="dnLoader"><div class="dn-lname">DARKNOVA</div><div class="dn-lsub">LOADING...</div><div class="dn-lbar"></div></div>
+<div id="dnLoader">
+    <div class="dn-lname">DARKNOVA</div>
+    <div class="dn-lsub">LOADING...</div>
+    <div class="dn-lbar"></div>
+</div>
     <div class="scene-bg">
         <div class="orb orb-1"></div>
         <div class="orb orb-2"></div>
         <div class="orb orb-3"></div>
     </div>
-    <div id="particles-js"></div>
     <div id="toast" class="toast">✦ ᴅᴀʀᴋɴᴏᴠᴀ</div>
     <div class="back-to-top" id="backToTop">
         <svg viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"></polyline></svg>
@@ -86,41 +88,14 @@
             <div id="modalDynamic"></div>
         </div>
     </div>
-    <div id="ntDetailModal" class="modal">
-        <div class="modal-card">
-            <button class="close" id="closeNtModal" aria-label="Close"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-            <div id="ntModalDynamic"></div>
-        </div>
-    </div>
-    <div id="animeModal" class="modal">
-        <div class="modal-card">
-            <button class="close" id="closeAnimeModal" aria-label="Close"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-            <div id="animeModalDynamic"></div>
-        </div>
-    </div>
-    <div id="liveModal" class="modal">
-        <div class="modal-card">
-            <button class="close" id="closeLiveModal" aria-label="Close"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-            <div id="liveModalDynamic"></div>
-        </div>
-    </div>
-    <div id="actorModal" class="modal">
-        <div class="modal-card">
-            <button class="close" id="closeActorModal" aria-label="Close"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-            <div id="actorModalDynamic"></div>
-        </div>
-    </div>
     <script src="script.js"></script>
-
 <script>
 (function(){
-  function hide(){var l=document.getElementById("dnLoader");if(l){l.classList.add("dn-hidden");setTimeout(function(){if(l.parentNode)l.parentNode.removeChild(l);},500);}}
-  document.addEventListener("DOMContentLoaded",function(){setTimeout(hide,1600);});
-  window.addEventListener("load",function(){setTimeout(hide,300);});
+  function hide(){var l=document.getElementById('dnLoader');if(l){l.classList.add('dn-hidden');setTimeout(function(){if(l.parentNode)l.parentNode.removeChild(l);},500);}}
+  document.addEventListener('DOMContentLoaded',function(){setTimeout(hide,1600);});
+  window.addEventListener('load',function(){setTimeout(hide,300);});
   setTimeout(hide,3000);
 })();
 </script>
 </body>
 </html>
-
-
