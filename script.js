@@ -1050,126 +1050,213 @@
   }
 
   // ═══════════════════════════════════════════
-  // HOME
+  // CAROUSEL BUILDER (shared helper)
   // ═══════════════════════════════════════════
-  async function loadHome(){
-    showLoader(true);
-    const [home, trending, hot, popular] = await Promise.all([
-      xcasper('/homepage'),
-      xcasper('/trending?page=0&perPage=20'),
-      xcasper('/hot'),
-      xcasper('/popular-search')
-    ]);
-    showLoader(false);
+  function buildAndInjectCarousel(items, placeholderId){
+    const target = document.getElementById(placeholderId);
+    if(!target || !items.length) return;
 
-    let html = '';
-
-    // ── Hero Carousel
-    const carouselItems = extractArray(trending) || extractArray(hot) || [];
-    if(carouselItems.length){
-      const slides = carouselItems.slice(0,6);
-      html += `<div class="hero-carousel" id="heroCarousel">
-        <div class="carousel-track" id="carouselTrack">`;
-      slides.forEach(item => {
-        const bg   = getBackdropUrl(item) || getCoverUrl(item) || '';
-        const t    = item.title||item.name||'Featured';
-        const sid  = getSubjectId(item);
-        const path = item.detailPath||item.path||'';
-        const year = item.releaseDate ? item.releaseDate.slice(0,4) : '';
-        const genre = Array.isArray(item.genre) ? item.genre.slice(0,2).join(' · ') : (item.genre||'').split(',').slice(0,2).join(' · ');
-        const rating = item.imdbRatingValue || '';
-        html += `<div class="carousel-slide" data-subjectid="${sid}" data-detailpath="${path}" style="background-image:url('${bg}');">
-          <div class="slide-content">
-            <div class="slide-badge">★ FEATURED</div>
-            <div class="slide-title">${t}</div>
-            <div class="slide-meta">${[year, genre, rating?'IMDb '+rating:''].filter(Boolean).join(' · ')}</div>
-          </div>
-          <div class="slide-play"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
-        </div>`;
-      });
-      html += `</div>
-        <button class="carousel-nav carousel-prev" id="carouselPrev"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
-        <button class="carousel-nav carousel-next" id="carouselNext"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button>
-        <div class="carousel-indicators" id="carouselIndicators">`;
-      slides.forEach((_,i) => { html += `<span class="carousel-indicator ${i===0?'active':''}"></span>`; });
-      html += `</div></div>`;
-    }
-
-    // ── Popular search chips
-    if(popular?.data && Array.isArray(popular.data)){
-      html += `<div class="row-header">${icon('search')}<h3>Popular Searches</h3></div><div class="chips">`;
-      popular.data.slice(0,20).forEach(term => {
-        html += `<span class="chip" data-keyword="${term.replace(/"/g,'&quot;')}">${term}</span>`;
-      });
-      html += `</div>`;
-    }
-
-    const homeArr  = extractArray(home);
-    const trendArr = extractArray(trending);
-    const hotArr   = extractArray(hot);
-    if(trendArr?.length) html += renderRow('Trending Now',   trendArr, 'trend');
-    if(hotArr?.length)   html += renderRow('Hot This Week',  hotArr,   'fire');
-    if(homeArr?.length)  html += renderRow('Recommended',    homeArr,  'star');
-
-    if(!html){
-      html = `<div class="error-message">
-        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="2" y="2" width="20" height="20" rx="2"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/></svg>
-        <p>No content available. Try searching.</p>
+    let html = `<div class="hero-carousel" id="heroCarousel"><div class="carousel-track" id="carouselTrack">`;
+    items.forEach(item => {
+      const bg     = getBackdropUrl(item) || getCoverUrl(item) || '';
+      const t      = item.title||item.name||'Featured';
+      const sid    = getSubjectId(item);
+      const path   = item.detailPath||item.path||'';
+      const year   = item.releaseDate ? item.releaseDate.slice(0,4) : '';
+      const genreRaw = Array.isArray(item.genre) ? item.genre.slice(0,2).join(' · ') : (item.genre||'').split(',').slice(0,2).join(' · ');
+      const rating = item.imdbRatingValue || '';
+      html += `<div class="carousel-slide" data-subjectid="${sid}" data-detailpath="${path}" style="background-image:url('${bg}');">
+        <div class="slide-content">
+          <div class="slide-badge">★ FEATURED</div>
+          <div class="slide-title">${t}</div>
+          <div class="slide-meta">${[year, genreRaw, rating?'IMDb '+rating:''].filter(Boolean).join(' · ')}</div>
+        </div>
+        <div class="slide-play"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
       </div>`;
-    }
+    });
+    html += `</div>
+      <button class="carousel-nav carousel-prev" id="carouselPrev"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
+      <button class="carousel-nav carousel-next" id="carouselNext"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button>
+      <div class="carousel-indicators" id="carouselIndicators">`;
+    items.forEach((_,i) => { html += `<span class="carousel-indicator ${i===0?'active':''}"></span>`; });
+    html += `</div></div>`;
 
-    container.innerHTML = html;
+    target.outerHTML = html;
 
-    // ── Init carousel
     setTimeout(() => {
       const track      = document.getElementById('carouselTrack');
       const slides     = document.querySelectorAll('.carousel-slide');
       const indicators = document.querySelectorAll('.carousel-indicator');
-      if(!slides.length || !track) return;
-
+      if(!track || !slides.length) return;
       let cur = 0;
       const total = slides.length;
-      let interval = setInterval(() => go(cur+1), 5000);
-
+      let autoTimer = setInterval(() => go(cur+1), 5000);
       function go(n){
-        if(n < 0) n = total-1;
-        if(n >= total) n = 0;
-        cur = n;
-        track.style.transform = `translateX(-${cur*100}%)`;
-        indicators.forEach((d,i) => d.classList.toggle('active', i===cur));
+        if(n<0) n=total-1; if(n>=total) n=0; cur=n;
+        track.style.transform=`translateX(-${cur*100}%)`;
+        indicators.forEach((d,i)=>d.classList.toggle('active',i===cur));
       }
-
-      document.getElementById('carouselPrev')?.addEventListener('click', () => { clearInterval(interval); go(cur-1); interval = setInterval(()=>go(cur+1),5000); });
-      document.getElementById('carouselNext')?.addEventListener('click', () => { clearInterval(interval); go(cur+1); interval = setInterval(()=>go(cur+1),5000); });
-      indicators.forEach((dot,i) => dot.addEventListener('click', () => { clearInterval(interval); go(i); interval = setInterval(()=>go(cur+1),5000); }));
-
-      let sx, sy;
-      track.addEventListener('touchstart', e => { sx = e.touches[0].clientX; sy = e.touches[0].clientY; clearInterval(interval); }, { passive:true });
-      track.addEventListener('touchend', e => {
-        const dx = e.changedTouches[0].clientX - sx;
-        const dy = e.changedTouches[0].clientY - sy;
-        if(Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 40) go(dx > 0 ? cur-1 : cur+1);
-        interval = setInterval(()=>go(cur+1),5000);
-      }, { passive:true });
-
-      slides.forEach(slide => {
-        slide.addEventListener('click', e => {
-          if(e.target.closest('.carousel-nav')) return;
-          const sid  = slide.dataset.subjectid;
-          const path = slide.dataset.detailpath;
-          const t    = slide.querySelector('.slide-title')?.textContent || '';
-          if(sid && sid !== 'missing') openDetail(sid, path, t, '', 0);
+      document.getElementById('carouselPrev')?.addEventListener('click',()=>{clearInterval(autoTimer);go(cur-1);autoTimer=setInterval(()=>go(cur+1),5000);});
+      document.getElementById('carouselNext')?.addEventListener('click',()=>{clearInterval(autoTimer);go(cur+1);autoTimer=setInterval(()=>go(cur+1),5000);});
+      indicators.forEach((dot,i)=>dot.addEventListener('click',()=>{clearInterval(autoTimer);go(i);autoTimer=setInterval(()=>go(cur+1),5000);}));
+      let sx,sy;
+      track.addEventListener('touchstart',e=>{sx=e.touches[0].clientX;sy=e.touches[0].clientY;clearInterval(autoTimer);},{passive:true});
+      track.addEventListener('touchend',e=>{
+        const dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;
+        if(Math.abs(dx)>Math.abs(dy)&&Math.abs(dx)>40)go(dx>0?cur-1:cur+1);
+        autoTimer=setInterval(()=>go(cur+1),5000);
+      },{passive:true});
+      slides.forEach(slide=>{
+        slide.addEventListener('click',e=>{
+          if(e.target.closest('.carousel-nav'))return;
+          const sid=slide.dataset.subjectid,path=slide.dataset.detailpath,t=slide.querySelector('.slide-title')?.textContent||'';
+          if(sid&&sid!=='missing')openDetail(sid,path,t,'',0);
         });
       });
-    }, 80);
+    }, 60);
+  }
 
-    // ── Chip click
-    document.querySelectorAll('.chip').forEach(c => {
-      c.addEventListener('click', e => {
-        const kw = e.currentTarget.dataset.keyword;
-        if(kw){ searchInput.value = kw; performSearch(kw); }
-      });
+  // ═══════════════════════════════════════════
+  // HOME  — progressive, fault-tolerant loader
+  // ═══════════════════════════════════════════
+
+  // Safe fetch: resolves to null on any error/timeout, never rejects
+  function safeFetch(endpoint, timeoutMs=8000){
+    return new Promise(resolve => {
+      const timer = setTimeout(() => resolve(null), timeoutMs);
+      xcasper(endpoint)
+        .then(d => { clearTimeout(timer); resolve(d); })
+        .catch(()  => { clearTimeout(timer); resolve(null); });
     });
+  }
+
+  async function loadHome(){
+    showLoader(true);
+
+    // Render skeleton shell immediately so user sees SOMETHING
+    container.innerHTML = `
+      <div id="carouselPlaceholder" style="height:240px;background:var(--bg3);border-radius:var(--radius2);margin-bottom:28px;display:flex;align-items:center;justify-content:center;">
+        <div class="loader" style="margin:0;"></div>
+      </div>
+      <div id="row1Placeholder" style="min-height:180px;"></div>
+      <div id="row2Placeholder" style="min-height:180px;"></div>
+      <div id="row3Placeholder" style="min-height:180px;"></div>`;
+
+    // Fire all requests but don't block on all of them together
+    const trendingPromise    = safeFetch('/trending?page=0&perPage=20');
+    const hotPromise         = safeFetch('/hot');
+    const homepagePromise    = safeFetch('/homepage');
+    const popularPromise     = safeFetch('/popular-search');
+    // Fallback search queries if the above return nothing
+    const actionPromise      = safeFetch('/search?keyword=action&page=1&perPage=20&subjectType=1');
+    const animePromise       = safeFetch('/browse?subjectType=5&page=1&perPage=20&orderBy=rating');
+    const seriesPromise      = safeFetch('/browse?subjectType=2&page=1&perPage=20&orderBy=rating');
+
+    // --- First: try to get trending for carousel (fast path)
+    const trending = await trendingPromise;
+    const trendArr = extractArray(trending);
+
+    // Build and inject carousel as soon as trending resolves
+    if(trendArr?.length){
+      buildAndInjectCarousel(trendArr.slice(0,6), 'carouselPlaceholder');
+    } else {
+      // Try hot as carousel fallback
+      const hot = await hotPromise;
+      const hotArr = extractArray(hot);
+      if(hotArr?.length){
+        buildAndInjectCarousel(hotArr.slice(0,6), 'carouselPlaceholder');
+      } else {
+        document.getElementById('carouselPlaceholder')?.remove();
+      }
+    }
+
+    // --- Second: inject rows progressively as each resolves
+    const hot      = await hotPromise;
+    const homepage = await homepagePromise;
+    const popular  = await popularPromise;
+
+    const hotArr  = extractArray(hot);
+    const homeArr = extractArray(homepage);
+
+    // Row 1: Trending
+    const r1 = document.getElementById('row1Placeholder');
+    if(r1){
+      if(trendArr?.length){
+        r1.outerHTML = renderRow('Trending Now', trendArr, 'trend');
+      } else {
+        r1.remove();
+      }
+    }
+
+    // Row 2: Hot / Recommended
+    const r2 = document.getElementById('row2Placeholder');
+    if(r2){
+      if(hotArr?.length){
+        r2.outerHTML = renderRow('Hot This Week', hotArr, 'fire');
+      } else if(homeArr?.length){
+        r2.outerHTML = renderRow('Recommended', homeArr, 'star');
+      } else {
+        r2.remove();
+      }
+    }
+
+    // Popular chips
+    if(popular?.data && Array.isArray(popular.data) && popular.data.length){
+      const r3 = document.getElementById('row3Placeholder');
+      if(r3){
+        let chipHtml = `<div class="row-header">${icon('search')}<h3>Popular Searches</h3></div><div class="chips">`;
+        popular.data.slice(0,20).forEach(term => {
+          chipHtml += `<span class="chip" data-keyword="${term.replace(/"/g,'&quot;')}">${term}</span>`;
+        });
+        chipHtml += '</div>';
+        r3.outerHTML = chipHtml;
+        document.querySelectorAll('.chip').forEach(c => {
+          c.addEventListener('click', e => {
+            const kw = e.currentTarget.dataset.keyword;
+            if(kw){ searchInput.value = kw; performSearch(kw); }
+          });
+        });
+      }
+    } else {
+      document.getElementById('row3Placeholder')?.remove();
+    }
+
+    showLoader(false);
+
+    // --- Fallback: if still nothing visible, load from search
+    const hasContent = container.querySelector('.movie-card, .carousel-slide');
+    if(!hasContent){
+      container.innerHTML = `
+        <div id="row1Placeholder" style="min-height:180px;"></div>
+        <div id="row2Placeholder" style="min-height:180px;"></div>
+        <div id="row3Placeholder" style="min-height:180px;"></div>`;
+
+      const [actionRes, animeRes, seriesRes] = await Promise.all([actionPromise, animePromise, seriesPromise]);
+      const actionArr = extractArray(actionRes);
+      const animeArr  = extractArray(animeRes);
+      const seriesArr = extractArray(seriesRes);
+
+      const r1b = document.getElementById('row1Placeholder');
+      const r2b = document.getElementById('row2Placeholder');
+      const r3b = document.getElementById('row3Placeholder');
+
+      if(actionArr?.length && r1b) r1b.outerHTML = renderRow('Movies', actionArr, 'film');
+      else r1b?.remove();
+
+      if(seriesArr?.length && r2b) r2b.outerHTML = renderRow('TV Series', seriesArr, 'trend');
+      else r2b?.remove();
+
+      if(animeArr?.length && r3b)  r3b.outerHTML = renderRow('Top Anime', animeArr, 'anime');
+      else r3b?.remove();
+
+      if(!container.querySelector('.movie-card')){
+        container.innerHTML = `<div class="error-message">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="2" y="2" width="20" height="20" rx="2"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/></svg>
+          <p>Could not load content.</p>
+          <p style="margin-top:8px;font-size:.78rem;">Check your internet connection or try searching.</p>
+        </div>`;
+      }
+    }
 
     attachCardListeners();
   }
