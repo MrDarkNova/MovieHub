@@ -244,17 +244,19 @@
         audioTracks = xcPlay.data.audioTracks || [];
       }
 
-      // Extract seasons from wherever the API puts them
-      const _dd = xcDetail?.data || {};
-      const _pd = xcPlay?.data   || {};
-      let seasons = _dd.seasons || _dd.seasonList || _dd.seasonInfo
-                 || _pd.seasons || _pd.seasonList || _pd.seasonInfo
-                 || [];
-      // Normalise episode key name
-      seasons = seasons.map(s => ({
-        ...s,
-        episodes: s.episodes || s.episodeList || s.episodeVOList || []
-      }));
+      // The main API returns seasons=[] always (no episode list in any endpoint).
+      // For series we use rich-detail which has max_season/max_episode from ShowBox.
+      // We build the season/episode UI from those numbers and stream via /play?se=&ep=
+      let maxSeason  = 0;
+      let maxEpisode = 0;
+      if(isSeries){
+        // Try to get max_season from rich-detail (has ShowBox data)
+        const richRes = await xcasper(`/rich-detail?subjectId=${subjectId}`);
+        if(richRes?.data){
+          maxSeason  = richRes.data.max_season  || 0;
+          maxEpisode = richRes.data.max_episode  || 0;
+        }
+      }
 
       currentSubjectId  = subjectId;
       currentDetailPath = detailPath;
@@ -293,37 +295,31 @@
 
       if(isSeries){
         html += '<h3 class="season-header">Seasons &amp; Episodes</h3>';
-
-        if(seasons.length){
-          // ── Season tabs
-          html += '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;" id="seasonTabsRow">';
-          seasons.forEach((s,i) => {
-            const sNum  = s.seasonNumber || (i+1);
-            const sName = s.name || ('Season '+sNum);
-            html += `<button class="chip ${i===0?'active':''}" id="stab-${i}" data-stab="${i}" style="font-size:.65rem;">${sName}</button>`;
-          });
+        if(maxSeason > 0){
+          // Season tabs built from max_season
+          html += '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;">';
+          for(let s=1; s<=maxSeason; s++){
+            html += `<button class="chip ${s===1?'active':''}" data-stab="${s}" style="font-size:.65rem;">Season ${s}</button>`;
+          }
           html += '</div>';
-
-          // ── Episode panels
-          seasons.forEach((season, si) => {
-            const sNum = season.seasonNumber || (si+1);
-            html += `<div id="spanel-${si}" style="${si===0?'':'display:none'}">`;
-            (season.episodes||[]).forEach(ep => {
-              const eNum = ep.episodeNumber || ep.episode || '?';
-              const eName = ep.name || ('Episode '+eNum);
-              html += `<div class="nt-file">
-                <span>S${sNum}E${eNum} — ${eName}</span>
-                <div style="display:flex;gap:5px;">
-                  <button class="play-episode" data-se="${sNum}" data-ep="${eNum}" style="font-size:.65rem;padding:4px 12px;">▶ Play</button>
-                  <button class="dl-episode" data-se="${sNum}" data-ep="${eNum}" style="font-size:.65rem;padding:4px 10px;background:var(--bg3);border:1px solid var(--border);color:var(--text2);border-radius:100px;cursor:pointer;">⬇</button>
-                </div>
-              </div>`;
-            });
-            html += '</div>';
-          });
+          // Episode list for active season (Season 1 default, max_episode episodes)
+          // Episodes are fetched on demand when user clicks Play
+          const epCount = maxEpisode > 0 ? maxEpisode : 24;
+          html += `<div id="epListWrap">`;
+          for(let e=1; e<=epCount; e++){
+            html += `<div class="nt-file">
+              <span style="font-family:var(--font-mono);font-size:.7rem;">S<span class="cur-season">1</span>E${String(e).padStart(2,'0')}</span>
+              <div style="display:flex;gap:5px;">
+                <button class="play-episode" data-se="1" data-ep="${e}" style="font-size:.65rem;padding:4px 12px;">▶ Play</button>
+                <button class="dl-episode" data-se="1" data-ep="${e}" style="font-size:.65rem;padding:4px 10px;background:var(--bg3);border:1px solid var(--border);color:var(--text2);border-radius:100px;cursor:pointer;">⬇</button>
+              </div>
+            </div>`;
+          }
+          html += `</div>`;
         } else {
-          // ── Fallback: manual season/episode picker
-          html += `<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end;margin:10px 0;">
+          // No max_season info — show simple picker
+          html += `<p style="font-size:.75rem;color:var(--text3);margin:8px 0;">Select season and episode to stream:</p>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end;margin:10px 0;">
             <div>
               <div style="font-size:.62rem;color:var(--text3);font-family:var(--font-mono);margin-bottom:4px;">SEASON</div>
               <select id="manualSeason" style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:7px 12px;color:var(--text);font-family:var(--font-mono);font-size:.72rem;outline:none;">
@@ -416,15 +412,16 @@
         });
       });
 
-      // Season tab switching
+      // Season tab switching — updates all episode buttons' data-se
       document.querySelectorAll('[data-stab]').forEach(tab => {
         tab.addEventListener('click', () => {
           document.querySelectorAll('[data-stab]').forEach(t => t.classList.remove('active'));
           tab.classList.add('active');
-          const idx = tab.dataset.stab;
-          document.querySelectorAll('[id^="spanel-"]').forEach(p => p.style.display = 'none');
-          const panel = document.getElementById(`spanel-${idx}`);
-          if(panel) panel.style.display = 'block';
+          const sNum = tab.dataset.stab;
+          // Update all play/dl buttons to the selected season
+          document.querySelectorAll('.play-episode').forEach(b => b.dataset.se = sNum);
+          document.querySelectorAll('.dl-episode').forEach(b => b.dataset.se = sNum);
+          document.querySelectorAll('.cur-season').forEach(el => el.textContent = sNum);
         });
       });
 
