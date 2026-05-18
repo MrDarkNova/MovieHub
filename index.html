@@ -3,24 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ᴅᴀʀᴋɴᴏᴠᴀ · Anime & Movie Hub</title>
-    <meta property="og:title" content="ᴅᴀʀᴋɴᴏᴠᴀ · Anime & Movie Hub" />
-    <meta property="og:description" content="Watch and download the latest movies, TV series, and anime. Free streaming and direct downloads." />
+    <title>ᴅᴀʀᴋɴᴏᴠᴀ · Cinema Hub</title>
+    <meta name="description" content="Watch and download the latest movies, TV series, and anime. Free streaming.">
+    <meta name="theme-color" content="#6c3fff">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="DARKNOVA">
+    <meta property="og:title" content="ᴅᴀʀᴋɴᴏᴠᴀ · Cinema Hub" />
+    <meta property="og:description" content="Watch and download movies, TV series, anime. Free streaming." />
     <meta property="og:image" content="https://files.catbox.moe/p1vn75.png" />
     <meta property="og:url" content="https://mrdarknova-movie-hub.netlify.app" />
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="ᴅᴀʀᴋɴᴏᴠᴀ" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="ᴅᴀʀᴋɴᴏᴠᴀ · Anime & Movie Hub" />
-    <meta name="twitter:description" content="Watch and download the latest movies, series and anime." />
-    <meta name="twitter:image" content="https://files.catbox.moe/p1vn75.png" />
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="manifest" href="manifest.json">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.3/dist/hls.min.js"></script>
 </head>
 <body>
 
-<!-- LOADER -->
 <div id="dnLoader">
     <div class="dn-logo-wrap">
         <div class="dn-lname">DARKNOVA</div>
@@ -30,83 +31,51 @@
     <div class="dn-ltip">Powered by Casper Tech Kenya</div>
 </div>
 
-<!-- AMBIENT BACKGROUND -->
 <div class="scene-bg">
-    <div class="orb orb-1"></div>
-    <div class="orb orb-2"></div>
-    <div class="orb orb-3"></div>
+    <div class="orb orb-1"></div><div class="orb orb-2"></div><div class="orb orb-3"></div>
     <div class="grain"></div>
 </div>
 
-<!-- TOAST -->
+<div id="pwaInstallBanner" class="pwa-banner" style="display:none">
+    <div class="pwa-icon">◈</div>
+    <div class="pwa-text"><strong>Install DARKNOVA</strong><span>Add to home screen for the full experience</span></div>
+    <button id="pwaInstallBtn" class="pwa-btn-install">INSTALL</button>
+    <button id="pwaDismissBtn" class="pwa-btn-dismiss">✕</button>
+</div>
+
 <div id="toast" class="toast"></div>
+<button class="back-to-top" id="backToTop"><svg viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"></polyline></svg></button>
 
-<!-- BACK TO TOP -->
-<button class="back-to-top" id="backToTop" aria-label="Back to top">
-    <svg viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"></polyline></svg>
-</button>
-
-<!-- TOP BAR -->
 <header class="top-bar">
-    <div class="logo">
-        <span class="logo-icon">◈</span>
-        <span class="logo-text">DARKNOVA</span>
-    </div>
+    <div class="logo"><span class="logo-icon">◈</span><span class="logo-text">DARKNOVA</span></div>
     <div class="search-container">
         <svg class="search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><line x1="16.5" y1="16.5" x2="22" y2="22"></line></svg>
         <input type="text" id="searchInput" placeholder="Search movies, series, anime..." autocomplete="off" spellcheck="false">
-        <button id="searchBtn">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="22" y2="22"/></svg>
-        </button>
+        <button id="searchBtn"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="22" y2="22"/></svg></button>
     </div>
-    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+    <button class="theme-toggle" id="themeToggle">
         <svg id="iconMoon" viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
         <svg id="iconSun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="display:none"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
     </button>
 </header>
 
-<!-- BOTTOM NAV -->
 <nav class="bottom-nav">
-    <button class="nav-item active" data-section="home" aria-label="Home">
-        <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-        <span class="nav-label">HOME</span>
-    </button>
-    <button class="nav-item" data-section="trending" aria-label="Trending">
-        <svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
-        <span class="nav-label">TREND</span>
-    </button>
-    <button class="nav-item" data-section="series" aria-label="TV Series">
-        <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-        <span class="nav-label">SERIES</span>
-    </button>
-    <button class="nav-item" data-section="anime" aria-label="Anime">
-        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-        <span class="nav-label">ANIME</span>
-    </button>
-    <button class="nav-item" data-section="live" aria-label="Live Sports">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49m11.31-2.82a10 10 0 0 1 0 14.14m-14.14 0a10 10 0 0 1 0-14.14"/></svg>
-        <span class="nav-label">LIVE</span>
-    </button>
-    <button class="nav-item" data-section="discover" aria-label="Discover">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
-        <span class="nav-label">FIND</span>
-    </button>
+    <button class="nav-item active" data-section="home"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span class="nav-label">HOME</span></button>
+    <button class="nav-item" data-section="trending"><svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg><span class="nav-label">TREND</span></button>
+    <button class="nav-item" data-section="series"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg><span class="nav-label">SERIES</span></button>
+    <button class="nav-item" data-section="anime"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><span class="nav-label">ANIME</span></button>
+    <button class="nav-item" data-section="live"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49m11.31-2.82a10 10 0 0 1 0 14.14m-14.14 0a10 10 0 0 1 0-14.14"/></svg><span class="nav-label">LIVE</span></button>
+    <button class="nav-item" data-section="discover"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg><span class="nav-label">FIND</span></button>
 </nav>
 
-<!-- MAIN CONTENT -->
 <main class="main" id="mainContent">
-    <div class="page-loader" id="globalLoader" style="display:none">
-        <div class="page-loader-bar"></div>
-    </div>
+    <div class="page-loader" id="globalLoader" style="display:none"><div class="page-loader-bar"></div></div>
     <div id="contentContainer"></div>
 </main>
 
-<!-- DETAIL MODAL -->
 <div id="detailModal" class="modal" role="dialog" aria-modal="true">
     <div class="modal-card">
-        <button class="close" id="closeModal" aria-label="Close">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-        </button>
+        <button class="close" id="closeModal"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
         <div id="modalDynamic"></div>
     </div>
 </div>
@@ -114,14 +83,20 @@
 <script src="script.js"></script>
 <script>
 (function(){
-    function hide(){
-        var l = document.getElementById('dnLoader');
-        if(l){ l.classList.add('dn-hidden'); setTimeout(function(){ if(l.parentNode) l.parentNode.removeChild(l); }, 600); }
-    }
-    document.addEventListener('DOMContentLoaded', function(){ setTimeout(hide, 1800); });
-    window.addEventListener('load', function(){ setTimeout(hide, 400); });
-    setTimeout(hide, 3500);
+    function hide(){var l=document.getElementById('dnLoader');if(l){l.classList.add('dn-hidden');setTimeout(function(){if(l.parentNode)l.parentNode.removeChild(l);},600);}}
+    document.addEventListener('DOMContentLoaded',function(){setTimeout(hide,1800);});
+    window.addEventListener('load',function(){setTimeout(hide,400);});
+    setTimeout(hide,3500);
+    // PWA
+    var _p=null;
+    window.addEventListener('beforeinstallprompt',function(e){
+        e.preventDefault();_p=e;
+        if(!localStorage.getItem('dn_pwa_gone')){var b=document.getElementById('pwaInstallBanner');if(b)b.style.display='flex';}
+    });
+    document.getElementById('pwaInstallBtn')?.addEventListener('click',function(){if(_p){_p.prompt();_p.userChoice.then(function(){document.getElementById('pwaInstallBanner').style.display='none';});}});
+    document.getElementById('pwaDismissBtn')?.addEventListener('click',function(){document.getElementById('pwaInstallBanner').style.display='none';localStorage.setItem('dn_pwa_gone','1');});
 })();
 </script>
 </body>
 </html>
+
