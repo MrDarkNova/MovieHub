@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link href="assets/img/95f15a270_logo.png" rel="icon" type="image/svg+xml" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <link href="/manifest.json" rel="manifest" />
+    <title>Nexus</title>
+    <meta content="An intuitive platform to centralize your personal knowledge, projects, and daily tasks into one connected workflow." name="description" />
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         MODULE 1: Ad Blocker + Player Sandbox + Router
+         Loaded FIRST — patches window.open, fetch, XHR, and History API
+         before the React app bundle initialises.
+    ════════════════════════════════════════════════════════════════════════ -->
+    <script type="module" src="modules/main.js"></script>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         MODULE 2: Main App Bundle (compiled, untouched)
+         React app — loads after modules so all protections are active.
+    ════════════════════════════════════════════════════════════════════════ -->
+    <script crossorigin src="assets/js/index-DYgi9BK6.js" type="module"></script>
+
+    <!-- Styles -->
+    <link crossorigin href="assets/css/index-D1uNnejf.css" rel="stylesheet" />
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         Open Graph / Twitter Card Meta
+    ════════════════════════════════════════════════════════════════════════ -->
+    <meta content="Nexus" property="og:title" />
+    <meta content="An intuitive platform to centralize your personal knowledge, projects, and daily tasks into one connected workflow." property="og:description" />
+    <meta content="https://media.base44.com/images/public/6a1dadbb4d0b602cb3e75988/95f15a270_logo.png/v1/fill/w_1200,h_630/95f15a270_logo.png" property="og:image" />
+    <meta content="website" property="og:type" />
+    <meta content="Nexus" property="og:site_name" />
+    <meta content="Nexus" name="twitter:title" />
+    <meta content="An intuitive platform to centralize your personal knowledge, projects, and daily tasks into one connected workflow." name="twitter:description" />
+    <meta content="https://media.base44.com/images/public/6a1dadbb4d0b602cb3e75988/95f15a270_logo.png/v1/fill/w_1200,h_630/95f15a270_logo.png" name="twitter:image" />
+    <meta content="summary_large_image" name="twitter:card" />
+
+    <!-- PWA -->
+    <meta content="yes" name="mobile-web-app-capable" />
+    <meta content="black" name="apple-mobile-web-app-status-bar-style" />
+    <meta content="Nexus" name="apple-mobile-web-app-title" />
+
+    <!-- SEO -->
+    <link href="https://nexus-link-spicy-core.base44.app" rel="canonical" />
+    <script data-seo-source="builder" type="application/ld+json">
+      {"name": "Nexus", "@context": "https://schema.org", "@type": "WebSite", "url": "https://nexus-link-spicy-core.base44.app"}
+    </script>
+    <script data-seo-source="builder" type="application/ld+json">
+      {"name": "Nexus", "logo": "https://media.base44.com/images/public/6a1dadbb4d0b602cb3e75988/95f15a270_logo.png", "@context": "https://schema.org", "@type": "Organization", "url": "https://nexus-link-spicy-core.base44.app"}
+    </script>
+  </head>
+
+  <body>
+    <div id="root">
+      <!-- SEO snapshot (hidden, for crawlers) -->
+      <div
+        data-seo-source="builder"
+        id="seo-snapshot"
+        style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;"
+      >
+        <h1>Nexus</h1>
+        <p>An intuitive platform to centralize your personal knowledge, projects, and daily tasks into one connected workflow.</p>
+        <nav aria-label="Pages">
+          <h2>Pages</h2>
+          <ul>
+            <li><a href="/Login">Login</a></li>
+            <li><a href="/Register">Register</a></li>
+            <li><a href="/ForgotPassword">Forgot Password</a></li>
+            <li><a href="/ResetPassword">Reset Password</a></li>
+            <li><a href="/movies">Browse</a></li>
+            <li><a href="/my-list">My List</a></li>
+            <li><a href="/search">Search</a></li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </body>
+</html>
