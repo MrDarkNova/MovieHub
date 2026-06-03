@@ -1,4 +1,4 @@
-# Nexus — Modular Project Structure
+#l Nexus — Modular Project Structure
 
 ## Folder Layout
 
