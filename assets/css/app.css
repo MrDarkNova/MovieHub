@@ -182,3 +182,7 @@ img { max-width: 100%; display: block; }
   .search input { width: 100%; }
   .nav { justify-content: flex-start; overflow: auto; }
 }
+
+video.yt{width:100%;aspect-ratio:16/9;border:0;border-radius:16px;margin-top:16px;background:#000}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 18px}
+.chip{border:1px solid rgba(255,255,255,.12);background:transparent;color:inherit;border-radius:999px;padding:6px 10px;cursor:pointer}
