@@ -2,41 +2,54 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>MovieHub — Discover films & series</title>
-    <meta name="description" content="MovieHub by DarkNova. Movies, series, and anime. Posters, plots, trailers, and a weekly anime board." />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>MovieHub — Discover films &amp; series</title>
+    <meta name="description" content="MovieHub by DarkNova. Browse movies, series, and anime. Posters, plots, official trailers, a weekly anime board, and a personal list." />
     <meta name="theme-color" content="#07070b" />
+    <meta property="og:title" content="MovieHub — Discover films &amp; series" />
+    <meta property="og:description" content="Movies, series, and anime. Official trailers and a list that stays on your device." />
+    <meta property="og:type" content="website" />
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://image.tmdb.org" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="assets/css/app.css" />
   </head>
   <body>
-    <div class="noise" aria-hidden="true"></div>
+    <a class="skip" href="#app">Skip to content</a>
     <header class="topbar">
-      <a class="brand" href="#/">
+      <a class="brand" href="#/" aria-label="MovieHub home">
         <span class="brand-mark">MH</span>
         <span class="brand-text">MovieHub</span>
       </a>
-      <nav class="nav">
+      <nav class="nav" aria-label="Main">
         <a href="#/" data-nav="home">Home</a>
         <a href="#/movies" data-nav="movies">Movies</a>
-        <a href="#/tv" data-nav="tv">TV</a>
+        <a href="#/tv" data-nav="tv">Series</a>
         <a href="#/anime" data-nav="anime">Anime</a>
-        <a href="#/list" data-nav="list">My List</a>
+        <a href="#/list" data-nav="list">My List <b id="list-count" hidden>0</b></a>
       </nav>
-      <form class="search" id="search-form" autocomplete="off">
-        <input id="search-input" type="search" placeholder="Search titles…" aria-label="Search movies and TV" />
+      <form class="search" id="search-form" role="search" autocomplete="off">
+        <label class="sr" for="search-input">Search movies and series</label>
+        <input id="search-input" type="search" placeholder="Search titles…  ( / )" enterkeyhint="search" />
         <button type="submit">Search</button>
       </form>
     </header>
-    <main id="app"></main>
+
+    <main id="app" tabindex="-1">
+      <noscript><section class="panel"><h1>JavaScript required</h1><p class="muted">MovieHub needs JavaScript to load the catalog.</p></section></noscript>
+    </main>
+
     <div id="modal" class="modal" hidden>
-      <div class="modal-backdrop" data-close></div>
+      <div class="modal-backdrop"></div>
       <div class="modal-card" role="dialog" aria-modal="true"></div>
     </div>
+    <div class="toasts" id="toasts" aria-live="polite"></div>
+
     <footer class="site-foot">
-      <p>Catalog and trailers. MovieHub does not host full films.</p>
+      <p>Catalog data and official trailers only. MovieHub does not host or stream full films.</p>
+      <p>Built by <a href="https://www.mrdarknova.com" target="_blank" rel="noopener">MR. DARKNOVA</a></p>
     </footer>
     <script type="module" src="assets/js/app.js"></script>
   </body>
