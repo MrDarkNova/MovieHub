@@ -207,6 +207,7 @@ function cardHtml(item) {
     <article class="card">
       <button type="button" class="card-open" data-open="${k}" aria-label="${esc(item.title)}${item.year ? `, ${esc(item.year)}` : ""}">
         ${img}
+        <span class="card-type">${esc(typeLabel(item.media_type))}</span>
         <span class="card-meta">
           <span class="t">${esc(item.title)}</span>
           <span class="m">${esc(meta || typeLabel(item.media_type))}</span>
@@ -271,6 +272,7 @@ function heroHtml(slides) {
         </div>
         ${slides.length > 1 ? `<div class="dots" role="tablist" aria-label="Featured title">${slides.map((_, i) => `<button type="button" role="tab" data-slide="${i}" aria-label="Show featured title ${i + 1}"></button>`).join("")}</div>` : ""}
       </div>
+      <div class="hero-note" aria-hidden="true">Now in the spotlight</div>
     </section>`;
 }
 
@@ -332,6 +334,10 @@ async function homeView(token) {
     ${slides.length ? heroHtml(slides) : '<section class="hero hero-plain"><div class="hero-copy"><h1>MovieHub</h1><p>Movies, series, and anime in one catalog.</p></div></section>'}
     <section class="section">
       ${failed ? `<p class="notice">Some rows could not load right now. <button type="button" class="link" data-retry>Retry</button></p>` : ""}
+      <div class="home-status">
+        <span>A good story is never far away.</span>
+        <span class="home-shortcut">Press <kbd>/</kbd> to search</span>
+      </div>
       ${rail("Trending", trend.slice(0, 16), "r-trending")}
       ${rail("Movies", film.slice(0, 16), "r-movies")}
       ${rail("Series", shows.slice(0, 16), "r-series")}
