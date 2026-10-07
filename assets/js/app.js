@@ -160,6 +160,18 @@ function fromSubject(item) {
     source: "catalog",
   };
 }
+function fromHome(json) {
+  const entries = asArray(json?.home?.operatingList).flatMap((section) => [
+    ...asArray(section?.banner?.items).map((entry) => entry?.subject || entry),
+    ...asArray(section?.subjects),
+  ]);
+  return [...new Map(
+    entries
+      .filter((entry) => entry?.subjectId != null)
+      .map((entry) => [String(entry.subjectId), fromSubject(entry)])
+  ).values()];
+}
+
 function fromAnime(item) {
   return {
     id: item.anime_id,
@@ -303,7 +315,7 @@ async function homeView(token) {
     px("/anime/tmdb", { action: "trending", type: "all", limit: "16" }),
     px("/anime/tmdb", { action: "discover", type: "movie", limit: "16" }),
     px("/anime/tmdb", { action: "discover", type: "tv", limit: "16" }),
-    px("/trending", { page: "1", perPage: "12" }),
+    px("/home"),
   ]);
   if (token !== navToken) return;
   if (failed === values.length) return paint(token, errorPanel("The movie service did not answer. Check your connection and try again."));
@@ -312,7 +324,7 @@ async function homeView(token) {
   const trend = trendingJson ? tmdbList(trendingJson) : [];
   const film = moviesJson ? tmdbList(moviesJson, "movie") : [];
   const shows = tvJson ? tmdbList(tvJson, "tv") : [];
-  const live = asArray(nativeJson?.trending?.subjectList).map(fromSubject);
+  const live = nativeJson ? fromHome(nativeJson) : [];
   const slides = trend.filter((x) => x.backdrop).slice(0, 5);
   if (!slides.length) slides.push(...[trend[0], live[0], film[0]].filter(Boolean).slice(0, 1));
 
@@ -519,7 +531,7 @@ async function renderTmdb(item, my) {
   const detail = unwrap(detailJson) || {};
   const full = remember({ ...item, ...fromTmdb({ ...detail, media_type: type }, type), source: "tmdb" });
   const genres = asArray(detail.genres).slice(0, 4).map((g) => g.name);
-  const vids = asArray(unwrap(videosJson)?.results).filter((v) => v.site === "YouTube" && v.key);
+  const vids = asArray(unwrap(videosJson)?.results).filter((v) => v.site === "YouTube" && v.key && v.official === true);
   const trailer = vids.find((v) => /trailer/i.test(`${v.type} ${v.name}`)) || vids[0];
   const more = similarJson ? tmdbList(similarJson, type).slice(0, 8) : [];
   const runtime = detail.runtime ? `${Math.floor(detail.runtime / 60)}h ${detail.runtime % 60}m` : detail.number_of_seasons ? `${detail.number_of_seasons} season${detail.number_of_seasons > 1 ? "s" : ""}` : "";
