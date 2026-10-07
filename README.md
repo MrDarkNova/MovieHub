@@ -2,7 +2,7 @@
 
 Movies, series, and anime for DarkNova. Catalog data comes from Prexzy. No API key.
 
-**Catalog and trailer previews only.** The API provides no full-film streaming or movie-download endpoint.
+**MovieHub uses Prexzy for catalog and media data.**
 
 ## Features
 
