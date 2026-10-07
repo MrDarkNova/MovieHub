@@ -531,7 +531,7 @@ async function renderTmdb(item, my) {
   const detail = unwrap(detailJson) || {};
   const full = remember({ ...item, ...fromTmdb({ ...detail, media_type: type }, type), source: "tmdb" });
   const genres = asArray(detail.genres).slice(0, 4).map((g) => g.name);
-  const vids = asArray(unwrap(videosJson)?.results).filter((v) => v.site === "YouTube" && v.key && v.official === true);
+  const vids = asArray(unwrap(videosJson)?.results).filter((v) => v.site === "YouTube" && v.key);
   const trailer = vids.find((v) => /trailer/i.test(`${v.type} ${v.name}`)) || vids[0];
   const more = similarJson ? tmdbList(similarJson, type).slice(0, 8) : [];
   const runtime = detail.runtime ? `${Math.floor(detail.runtime / 60)}h ${detail.runtime % 60}m` : detail.number_of_seasons ? `${detail.number_of_seasons} season${detail.number_of_seasons > 1 ? "s" : ""}` : "";
