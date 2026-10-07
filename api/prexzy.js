@@ -1,6 +1,5 @@
 const ALLOW = new Set([
   "/anime/tmdb",
-  "/trending",
   "/home",
   "/suggest",
   "/recommendations",
