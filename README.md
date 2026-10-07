@@ -2,7 +2,7 @@
 
 Movies, series, and anime for DarkNova. Catalog data comes from Prexzy. No API key.
 
-**Catalog and official trailers only.** MovieHub does not host or stream full films.
+**Catalog and trailer previews only.** The API provides no full-film streaming or movie-download endpoint.
 
 ## Features
 
@@ -10,7 +10,7 @@ Movies, series, and anime for DarkNova. Catalog data comes from Prexzy. No API k
 - Movies and Series pages with "Load more"
 - Search across movies and series, with All / Movies / Series filters (press `/` to jump to the search box)
 - Anime: genres, featured, the weekly schedule, synopsis and episode list
-- Title details with an official YouTube trailer (loads only when you press play, via youtube-nocookie)
+- Title details with trailer playback when available (official YouTube embeds for TMDB results; Prexzy home-feed previews for catalog results)
 - My List: one-tap save from any card, filters, clear all; stored in the browser only
 - Loading skeletons, per-row error handling with retry, one failing source never blanks a page
 - Accessible: skip link, labelled controls, focus-trapped dialog, Escape to close, keyboard-operable cards, reduced-motion support
